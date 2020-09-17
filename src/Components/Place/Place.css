@@ -1,0 +1,11 @@
+.location-info img {
+    width:175px;
+    height:300px;
+    position: relative;
+}
+.location-info h4 {
+    position: absolute;
+    bottom:0;
+    left: 20%;
+    color:#fff;
+}
