@@ -21,6 +21,9 @@ function App() {
     name:'',
     password:'',
     email:'',
+    error:'',
+    success:true,
+    formValid:true
   });
   const [locationInfo,setLocationInfo] = useState(0)
   return (

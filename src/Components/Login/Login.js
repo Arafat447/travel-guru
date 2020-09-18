@@ -30,7 +30,8 @@ firebase.initializeApp(firebaseConfig);
                 history.replace(from);
             }).catch(function (error) {
                 var errorMessage = error.message;
-                console.log(errorMessage)
+                const newUser = {...loggedInUser}
+                newUser.error = errorMessage;
             });
 
     }
@@ -42,7 +43,8 @@ firebase.initializeApp(firebaseConfig);
             history.replace(from);
         }).catch(function (error) {
             var errorMessage = error.message;
-            console.log(errorMessage)
+            const newUser = {...loggedInUser}
+             newUser.error = errorMessage;
         });
     }
 
@@ -61,6 +63,12 @@ firebase.initializeApp(firebaseConfig);
         if (isValid) {
             const newUser = { ...loggedInUser }
             newUser[e.target.name] = e.target.value;
+            setLoggedInUser(newUser)
+            
+        }
+        else{
+            const newUser = { ...loggedInUser }
+            newUser.formValid = false;
             setLoggedInUser(newUser)
         }
         
@@ -81,7 +89,7 @@ firebase.initializeApp(firebaseConfig);
                     const newUserInfo = { ...loggedInUser }
                     newUserInfo.success = false;
                     newUserInfo.error = errorMessage;
-                    console.log(errorMessage)
+                    newUserInfo.success = false;
                     setLoggedInUser(newUserInfo)
                 });
         }
@@ -94,11 +102,13 @@ firebase.initializeApp(firebaseConfig);
                     newUserInfo.name = res.user.displayName;
                     setLoggedInUser(newUserInfo);
                     history.replace(from);
-                    console.log(loggedInUser)
                 })
                 .catch(function (error) {
                     var errorMessage = error.message;
-                    console.log(errorMessage)
+                    const newUser = {...loggedInUser}
+                    newUser.error = errorMessage;
+                    newUser.success= false;
+                    setLoggedInUser(newUser)
                     // ...
                 });
         }
@@ -110,7 +120,7 @@ firebase.initializeApp(firebaseConfig);
         user.updateProfile({
           displayName:name
         }).then(function() {
-          console.log("update successfull")
+          console.log("update successfully")
         }).catch(function(error) {
           console.log(error);
         });
@@ -125,15 +135,15 @@ firebase.initializeApp(firebaseConfig);
                     <form onSubmit={handleSubmit} className="mt-2">
                         {newUser && <div className="form-group">
                             <label for="">Name</label>
-                            <input name="name" onBlur={handleBlur} type="text" className="form-control" id="" placeholder="Enter name" />
+                            <input name="name" onBlur={handleBlur} type="text" className="form-control" id="" required placeholder="Enter name" />
                         </div>}
                         <div className="form-group">
                             <label for="">Email address</label>
-                            <input name="email" onBlur={handleBlur} type="email" className="form-control" id="" placeholder="Enter email" />
+                            <input name="email" onBlur={handleBlur} type="email" className="form-control" id=""  required placeholder="Enter email" />
                         </div>
                         <div className="form-group">
                             <label for="">Password</label>
-                            <input name="password" onBlur={handleBlur} type="password" className="form-control" id="" placeholder="Password" />
+                            <input name="password" onBlur={handleBlur} type="password" className="form-control" id=""  required placeholder="Password" />
                         </div>
                         <div className="d-flex justify-content-between my-2" >
                             <div className="form-check">
@@ -146,6 +156,8 @@ firebase.initializeApp(firebaseConfig);
                         </div>
                         <button type="submit" className="btn btn-warning  mt-3 d-block w-75 mx-auto ">Login</button>
                     </form>
+                    {loggedInUser.success==false && <p className="text-danger">{loggedInUser.error}</p>}
+                    {loggedInUser.formValid == false && <p className="text-danger">Email or password is not valid , please check again..</p>}
                     <div className="d-flex justify-content-center mt-3" >
                         <p>do not have account  ? </p>
                         <button style={{ marginLeft: '10px', borderRadius: '5px' }} onClick={() => setNewUser(!newUser)}>Create account</button>
