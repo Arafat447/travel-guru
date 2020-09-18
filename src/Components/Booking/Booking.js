@@ -1,18 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Booking.css';
 import Header from '../Header/Header';
 import { Link, useParams } from 'react-router-dom';
 import fakeData from '../FakeData/FakeData'
+import { userContext } from '../../App';
 const Booking = () => {
 
     const placeData = fakeData;
     const {locationId} = useParams();
     const locationData = placeData.filter(place => place.id == locationId);
-    console.log(locationData)
+    const {location} = useContext(userContext);
+    const[locationInfo,setLocationInfo] = location;
     const handleSubmit = ()=>{
-        
+        setLocationInfo(locationId);
     }
+    console.log(locationId)
     return (
         <div className="home-container">
             <Header></Header>
@@ -24,11 +27,11 @@ const Booking = () => {
                     </div>
 
                     <div className="col-md-6 form-container">
-                        <form onSubmit={handleSubmit}>
+                        <form>
                             <fieldset className="form-group">
                                 <div className="form-group">
                                     <label className="form-control-label">Origin</label>
-                                    <input class="form-control" type="text" name="firstName" placeholder="Origin" />
+                                    <input className="form-control" type="text" name="firstName" placeholder="Origin" />
                                 </div>
                                 <div className="form-group">
                                     <label className="form-control-label">Destination</label>
@@ -48,7 +51,7 @@ const Booking = () => {
                                 </div>
                             </div>
                             <br /><br />
-                            <Link to="/destination"><input type="submit" value="Start Booking" /></Link>
+                            <Link to="/destination"><button onClick={handleSubmit} className="btn btn-warning  mt-3 d-block w-100 mx-auto " type="submit">Start Booking</button></Link>
                         </form>
                     </div>
                 </div>

@@ -6,7 +6,8 @@ import { userContext } from '../../App';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
-    const [loggedInUser,setLoggedInUser] = useContext(userContext);
+    const {loggedUser} = useContext(userContext);
+    const[loggedInUser,setLoggedInUser] = loggedUser;
     return (
         <div>
             <Container>

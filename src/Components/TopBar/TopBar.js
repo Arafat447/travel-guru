@@ -6,7 +6,8 @@ import logo from '../../Icon/Logo.png';
 import './TopBar.css'
 
 const TopBar = () => {
-    const [loggedInUser,setLoggedInUser] = useContext(userContext);
+    const {loggedUser} = useContext(userContext);
+    const[loggedInUser,setLoggedInUser] = loggedUser;
     return (
         <div >
             <Container className="navbar-container">

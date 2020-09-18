@@ -22,8 +22,9 @@ function App() {
     password:'',
     email:'',
   });
+  const [locationInfo,setLocationInfo] = useState(0)
   return (
-    <userContext.Provider value ={[loggedInUser,setLoggedInUser]}>
+    <userContext.Provider value ={{loggedUser:[loggedInUser,setLoggedInUser],location:[locationInfo,setLocationInfo]}}>
       <Router>
         <Switch>
           <Route path="/home">

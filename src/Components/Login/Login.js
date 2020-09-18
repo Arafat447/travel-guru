@@ -8,8 +8,9 @@ import { userContext } from '../../App';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 firebase.initializeApp(firebaseConfig);
 
-const Login = () => {
-    const [loggedInUser, setLoggedInUser] = useContext(userContext);
+    const Login = () => {
+    const {loggedUser} = useContext(userContext);
+    const[loggedInUser,setLoggedInUser] = loggedUser;
     const [newUser, setNewUser] = useState(false);
     const fbProvider = new firebase.auth.FacebookAuthProvider();
     let history = useHistory();
@@ -69,8 +70,10 @@ const Login = () => {
         if (newUser && loggedInUser.email && loggedInUser.password) {
             firebase.auth().createUserWithEmailAndPassword(loggedInUser.email, loggedInUser.password)
                 .then(res => {
+                    const newUserInfo ={...loggedInUser}
+                    setLoggedInUser(newUserInfo)
+                    UpdateUserName(newUserInfo.name)
                     history.replace(from);
-                    updateUserName(loggedInUser.name)
 
                 })
                 .catch(function (error) {
@@ -87,6 +90,9 @@ const Login = () => {
         if (!newUser && loggedInUser.email && loggedInUser.password) {
             firebase.auth().signInWithEmailAndPassword(loggedInUser.email, loggedInUser.password)
                 .then(res => {
+                    const newUserInfo = {...loggedInUser}
+                    newUserInfo.name = res.user.displayName;
+                    setLoggedInUser(newUserInfo);
                     history.replace(from);
                     console.log(loggedInUser)
                 })
@@ -98,25 +104,25 @@ const Login = () => {
         }
         e.preventDefault();
     }
-    const updateUserName = name => {
-        const user = firebase.auth().currentUser;
+    
+    const UpdateUserName = (name) => {
+        var user = firebase.auth().currentUser;
         user.updateProfile({
-          displayName: name
-        }).then(function () {
-          console.log('user name successfully updated')
-        }).catch(function (error) {
-          console.log(error)
+          displayName:name
+        }).then(function() {
+          console.log("update successfull")
+        }).catch(function(error) {
+          console.log(error);
         });
       }
+
     return (
         <div className="home-container">
             <Header></Header>
             <div className="login-container container">
                 <div className="from-group bg-light login-form mx-auto p-3">
                     <h2 className="mb-3" >Log in</h2>
-                    <form onSubmit={handleSubmit} className="mt-2" >
-
-
+                    <form onSubmit={handleSubmit} className="mt-2">
                         {newUser && <div className="form-group">
                             <label for="">Name</label>
                             <input name="name" onBlur={handleBlur} type="text" className="form-control" id="" placeholder="Enter name" />
