@@ -23,8 +23,8 @@ const Header = () => {
                             <Link className="text-white mr-4" to="/blog">Blog</Link>
                             <Link className="text-white mr-4" to="/contact">Contact</Link>
                             {
-                                loggedInUser.name ?<Nav.Link className="text-white mr-4">{loggedInUser.name}</Nav.Link> 
-                                : <Button variant="warning">Login</Button>
+                                loggedInUser.name ?<Link className="text-white mr-4">{loggedInUser.name}</Link> 
+                                :<Link to="/login"> <Button variant="warning">Login</Button> </Link>
                             }
                         </Nav>
                     </Navbar.Collapse>

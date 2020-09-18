@@ -3,6 +3,10 @@
     height:300px;
     position: relative;
 }
+.location-info img:hover {
+    border: 2px solid orange;
+    border-radius: 15px;
+}
 .location-info h4 {
     position: absolute;
     bottom:0;

@@ -6,7 +6,9 @@ import {
   Link
 } from "react-router-dom";
 import './App.css';
+import Blog from './Components/Blog/Blog';
 import Booking from './Components/Booking/Booking';
+import Contact from './Components/Contact/Contact';
 import Home from './Components/Home/Home';
 import Login from './Components/Login/Login';
 import NotFound from './Components/NotFound/NotFound';
@@ -35,6 +37,12 @@ function App() {
           </PrivateRoute>
           <Route path="/login">
             <Login></Login>
+          </Route>
+          <Route path="/blog">
+            <Blog></Blog>
+          </Route>
+          <Route path="/contact">
+            <Contact></Contact>
           </Route>
           <Route exact path="/">
             <Home></Home>

@@ -10,7 +10,7 @@ firebase.initializeApp(firebaseConfig);
 
 const Login = () => {
     const [loggedInUser, setLoggedInUser] = useContext(userContext);
-    const [newUser,setNewUser] = useState(false);
+    const [newUser, setNewUser] = useState(false);
     const fbProvider = new firebase.auth.FacebookAuthProvider();
     let history = useHistory();
     let location = useLocation();
@@ -46,7 +46,7 @@ const Login = () => {
     }
 
     const handleBlur = (e) => {
-        let isValid;
+        let isValid = true;
         if (e.target.name === 'email') {
             isValid = /\S+@\S+\.\S+/.test(e.target.value)
         }
@@ -56,21 +56,22 @@ const Login = () => {
             isValid = passwordNumber && passwordLength;
 
         }
+
         if (isValid) {
             const newUser = { ...loggedInUser }
             newUser[e.target.name] = e.target.value;
             setLoggedInUser(newUser)
         }
+        
     }
-
+   
     const handleSubmit = (e) => {
         if (newUser && loggedInUser.email && loggedInUser.password) {
             firebase.auth().createUserWithEmailAndPassword(loggedInUser.email, loggedInUser.password)
                 .then(res => {
-                    const newUserInfo = { ...loggedInUser }
-                    setLoggedInUser(newUserInfo);
                     history.replace(from);
-                    
+                    updateUserName(loggedInUser.name)
+
                 })
                 .catch(function (error) {
                     var errorMessage = error.message;
@@ -81,21 +82,32 @@ const Login = () => {
                     setLoggedInUser(newUserInfo)
                 });
         }
-        
-        if(!newUser && loggedInUser.email && loggedInUser.password){
+
+
+        if (!newUser && loggedInUser.email && loggedInUser.password) {
             firebase.auth().signInWithEmailAndPassword(loggedInUser.email, loggedInUser.password)
-            .then(res => {
-            history.replace(from);
-            })
-            .catch(function(error) {
-                var errorMessage = error.message;
-                console.log(errorMessage)
-                // ...
-              });
+                .then(res => {
+                    history.replace(from);
+                    console.log(loggedInUser)
+                })
+                .catch(function (error) {
+                    var errorMessage = error.message;
+                    console.log(errorMessage)
+                    // ...
+                });
         }
         e.preventDefault();
     }
-
+    const updateUserName = name => {
+        const user = firebase.auth().currentUser;
+        user.updateProfile({
+          displayName: name
+        }).then(function () {
+          console.log('user name successfully updated')
+        }).catch(function (error) {
+          console.log(error)
+        });
+      }
     return (
         <div className="home-container">
             <Header></Header>
@@ -103,9 +115,11 @@ const Login = () => {
                 <div className="from-group bg-light login-form mx-auto p-3">
                     <h2 className="mb-3" >Log in</h2>
                     <form onSubmit={handleSubmit} className="mt-2" >
+
+
                         {newUser && <div className="form-group">
                             <label for="">Name</label>
-                            <input name="name" onBlur={handleBlur} type="text" className="form-control" id="" placeholder="Enter your name" />
+                            <input name="name" onBlur={handleBlur} type="text" className="form-control" id="" placeholder="Enter name" />
                         </div>}
                         <div className="form-group">
                             <label for="">Email address</label>
@@ -127,8 +141,8 @@ const Login = () => {
                         <button type="submit" className="btn btn-warning  mt-3 d-block w-75 mx-auto ">Login</button>
                     </form>
                     <div className="d-flex justify-content-center mt-3" >
-                            <p>do not have account  ? </p>
-                            <button style={{marginLeft:'10px', borderRadius:'5px'}} onClick={()=>setNewUser(!newUser)}>Create account</button>
+                        <p>do not have account  ? </p>
+                        <button style={{ marginLeft: '10px', borderRadius: '5px' }} onClick={() => setNewUser(!newUser)}>Create account</button>
                     </div>
                 </div>
                 <div className="or-line d-block  mx-auto  text-center" > <span>---------</span> Or <span>---------</span>  </div>
